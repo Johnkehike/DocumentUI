@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="search-container" id="search-container">
+        <form action="" class="search-form" id="search-form">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search by name..." id="searching">
+        </form>
+        <div class="stats-n-column-search" id="stats-n-column-search">
+            <div class="stats" id="stats">
+                <button class="status-btn" id="status-btn">Status <i class="fa-solid fa-angle-down"></i></button>
+                <div class="status-body-no" id="status-body-no">
+                    <div class="active-container" id="active-container">
+                        <button class="active-btn" id="active-btn">
+                            Active <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                    <div class="active-container" id="active-container">
+                        <button class="active-btn" id="active-btn">
+                            On-leave <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                    <div class="active-container" id="active-container">
+                        <button class="active-btn" id="active-btn">
+                            Vacation<i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="column" id="column">
+                <button class="column-btn" id="column-btn">Column <i class="fa-solid fa-angle-down"></i></button>
+            </div> -->
+        </div>
+    </div>
+    
+    <div class="table-container" id="table-container">
+        <table>
+
+            <thead class="table-head" id="table-head">
+                
+                <tr class="head-row" id="head-row">
+                    <th>NAME</th>
+                    <th>ROLE</th>
+
+                    
+                    <th class="stats" id="stats">
+                        <span>STATUS</span>
+                        <span>Phone Number</span>
+                    </th>
+                    
+
+                </tr>
+            </thead>
+            
+            <tbody class="table-body" id="table-body">
+                <!-- <tr class="body-item" id="body-item">
+                    <td class="group-one" id="group-one">
+                        <div class="img-div" id="img-div">
+                            <img src="./assets/1.jpg" alt="">
+                        </div>
+                        <div class="name-group" id="name-group">
+                            <div class="name-direct" id="name-direct">
+                                <h2>John Kehike</h2>
+                            </div>
+                            <div class="email" id="email">
+                                <p>tony.reichert@example.com</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="group-two" id="group-two">
+                        <div class="name-direct" id="name-direct">
+                            <h2>CEO</h2>
+                        </div>
+                        <div class="email" id="email">
+                            <p>Management</p>
+                        </div>
+                    </td>
+                    
+
+                    <td class="statb" id="statb">
+                    <span class="group-three" id="group-three"><button>Active</button></span>
+                    <span class="group-four">
+                        <div class="eye" id="eye">
+                            <i class="fa-regular fa-eye"></i>
+                        </div>
+                        <div class="edit" id="edit">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="delete" id="delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </div>
+                    </spand>
+                    </td>
+                    
+
+
+                </tr>
+                <tr class="body-item" id="body-item">
+                    <td class="group-one" id="group-one">
+                        <div class="img-div" id="img-div">
+                            <img src="./assets/2.jpg" alt="">
+                        </div>
+                        <div class="name-group" id="name-group">
+                            <div class="name-direct" id="name-direct">
+                                <h2>John Kehike</h2>
+                            </div>
+                            <div class="email" id="email">
+                                <p>tony.reichert@example.com</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="group-two" id="group-two">
+                        <div class="name-direct" id="name-direct">
+                            <h2>CEO</h2>
+                        </div>
+                        <div class="email" id="email">
+                            <p>Management</p>
+                        </div>
+                    </td>
+                    
+
+                    <td class="statb" id="statb">
+                    <span class="group-three" id="group-three"><button>Active</button></span>
+                    <span class="group-four">
+                        <div class="eye" id="eye">
+                            <i class="fa-regular fa-eye"></i>
+                        </div>
+                        <div class="edit" id="edit">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="delete" id="delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </div>
+                    </tspand>
+                    </td>
+                    
+
+
+                </tr>
+                <tr class="body-item" id="body-item">
+                    <td class="group-one" id="group-one">
+                        <div class="img-div" id="img-div">
+                            <img src="./assets/3.jpg" alt="">
+                        </div>
+                        <div class="name-group" id="name-group">
+                            <div class="name-direct" id="name-direct">
+                                <h2>John Kehike</h2>
+                            </div>
+                            <div class="email" id="email">
+                                <p>tony.reichert@example.com</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="group-two" id="group-two">
+                        <div class="name-direct" id="name-direct">
+                            <h2>CEO</h2>
+                        </div>
+                        <div class="email" id="email">
+                            <p>Management</p>
+                        </div>
+                    </td>
+                    
+
+                    <td class="statb" id="statb">
+                    <span class="group-three" id="group-three"><button>Active</button></span>
+                    <span class="group-four">
+                        <div class="eye" id="eye">
+                            <i class="fa-regular fa-eye"></i>
+                        </div>
+                        <div class="edit" id="edit">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="delete" id="delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </div>
+                    </tspand>
+                    </td>
+                    
+
+
+                </tr>
+                <tr class="body-item" id="body-item">
+                    <td class="group-one" id="group-one">
+                        <div class="img-div" id="img-div">
+                            <img src="./assets/4.jpg" alt="">
+                        </div>
+                        <div class="name-group" id="name-group">
+                            <div class="name-direct" id="name-direct">
+                                <h2>John Kehike</h2>
+                            </div>
+                            <div class="email" id="email">
+                                <p>tony.reichert@example.com</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="group-two" id="group-two">
+                        <div class="name-direct" id="name-direct">
+                            <h2>CEO</h2>
+                        </div>
+                        <div class="email" id="email">
+                            <p>Management</p>
+                        </div>
+                    </td>
+                    
+
+                    <td class="statb" id="statb">
+                    <span class="group-three" id="group-three"><button>Active</button></span>
+                    <span class="group-four">
+                        <div class="eye" id="eye">
+                            <i class="fa-regular fa-eye"></i>
+                        </div>
+                        <div class="edit" id="edit">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="delete" id="delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </div>
+                    </tspand>
+                    </td>
+                    
+
+
+                </tr> -->
+            </tbody>
+            
+        </table>
+    </div>
+
+    <div class="form-display" id="form-container">
+        
+            <form action="submit" class="form-display"  id="form">
+                <span class="close" onclick="closeContainer()">&times;</span>
+                <div class="input-group" id="input-group">
+                    <label for="naming">Name</label>
+                    <input type="text" id="naming" placeholder="Enter your name">
+                </div>
+                <div class="input-group" id="input-group">
+                    <label for="emailing">Email</label>
+                    <input type="text" id="emailing" placeholder="Enter your email">
+                </div>
+                <div class="input-group" id="input-group">
+                    <label for="status">Status</label>
+                    <input type="text" id="status" placeholder="Enter your status">
+                </div>
+                <div class="btn" id="btn">
+                    <button type="submit" class="my-btn" id="my-btn">Submit</button>
+                    <button type="button" class="my-btn-button" id="my-btn-button">Delete</button>
+                </div>
+            </form>
+
+        
+    </div>
+      <div id="pagination" class="pagination-container"></div>
+
+
+      <!-- <div class="search-container" id="search-container">
+        <form action="" class="search-form" id="search-form">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search by name...">
+        </form>
+        <div class="stats-n-column-search" id="stats-n-column-search">
+            <div class="stats" id="stats">
+                <button class="status-btn" id="status-btn">Status <i class="fa-solid fa-angle-down"></i></button>
+                <div class="status-body-no" id="status-body-no">
+                    <div class="active-container" id="active-container">
+                        <button class="active-btn" id="active-btn">
+                            Active <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                    <div class="active-container" id="active-container">
+                        <button class="active-btn" id="active-btn">
+                            on-leave <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                    <div class="active-container" id="active-container">
+                        <button class="active-btn" id="active-btn">
+                            vacation<i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="column" id="column">
+                <button class="column-btn" id="column-btn">Column <i class="fa-solid fa-angle-down"></i></button>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="column-body" id="column-body">
+            <div class="name-col-container" id="name-col-container">
+                <button class="name-btn" id="name-btn">
+                    Name <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+            <div class="name-col-container" id="name-col-container">
+                <button class="name-btn" id="name-btn">
+                    Name <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+            <div class="name-col-container" id="name-col-container">
+                <button class="name-btn" id="name-btn">
+                    Name <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+        </div>
+
+
+
+      </div> -->
+
+
+      <div class="page-items" id="page-items">
+        <div class="pagination-container" id="pagination-nice">
+            <!-- pagination-container page-items-container -->
+            <!-- <div class="left-arrow" id="left-arrow">
+                <i class="fa-solid fa-angle-left"></i>
+            </div>
+            <div class="d-number" id="d-number">
+                <a href="#">1</a>
+            </div>
+            <div class="d-number" id="d-number">
+                <a href="#">2</a>
+            </div>
+            <div class="d-number" id="d-number">
+                <a href="#">3</a>
+            </div>
+            <div class="right-arrow" id="right-arrow">
+                <i class="fa-solid fa-angle-right"></i>
+            </div> -->
+        </div>
+
+    </div>
+
+      <script src="https://kit.fontawesome.com/9125c408bc.js" crossorigin="anonymous"></script>
+    <script type="module" src="index.js"></script>
+</body>
+</html>
