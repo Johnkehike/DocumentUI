@@ -9,6 +9,12 @@ const apiKeyClientSecret = process.env.CLIENT_SECRET;
 const databaseUrl = process.env.SITE_ID;
 const databaseUrllib = process.env.DOCUMENT_LIBRARY_ID;
 
+console.log("Tenant ID:", apiKeyTenantId); // Temporary
+console.log("Client ID:", apiKeyClientId); // Temporary
+console.log("Client Secret:", apiKeyClientSecret); // Temporary
+console.log("Site ID:", databaseUrl); // Temporary
+console.log("Document Library ID:", databaseUrllib); // Temporary
+
 const app = express();
 const PORT = process.env.PORT || 3600;
 
