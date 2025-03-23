@@ -3,27 +3,22 @@ const axios = require('axios');
 const path = require('path');
 require('dotenv').config();
 
-const apiKeyTenantId = process.env.API_KEY;
-const apiKeyClientId = process.env.CLIENT_ID;
-const apiKeyClientSecret = process.env.CLIENT_SECRET;
-const databaseUrl = process.env.SITE_ID;
-const databaseUrllib = process.env.DOCUMENT_LIBRARY_ID;
+const TENANT_ID = process.env.API_KEY;
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const SITE_ID = process.env.SITE_ID;
+const DOCUMENT_LIBRARY_ID = process.env.DOCUMENT_LIBRARY_ID;
 
-console.log("Tenant ID:", apiKeyTenantId); // Temporary
-console.log("Client ID:", apiKeyClientId); // Temporary
-console.log("Client Secret:", apiKeyClientSecret); // Temporary
-console.log("Site ID:", databaseUrl); // Temporary
-console.log("Document Library ID:", databaseUrllib); // Temporary
 
 const app = express();
 const PORT = process.env.PORT || 3600;
 
 // 🔹 Replace these with your actual credentials
-const TENANT_ID = apiKeyTenantId;
-const CLIENT_ID = apiKeyClientId;
-const CLIENT_SECRET = apiKeyClientSecret;
-const SITE_ID  = databaseUrl;
-const DOCUMENT_LIBRARY_ID = databaseUrllib; 
+// const TENANT_ID = apiKeyTenantId;
+// const CLIENT_ID = apiKeyClientId;
+// const CLIENT_SECRET = apiKeyClientSecret;
+// const SITE_ID  = databaseUrl;
+// const DOCUMENT_LIBRARY_ID = databaseUrllib; 
 
 
 // ✅ Function to get an access token from Microsoft Entra ID (Azure AD)
