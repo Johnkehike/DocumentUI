@@ -1,7 +1,10 @@
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
+const { error } = require('console');
 require('dotenv').config();
+const app = express();
+const PORT = process.env.PORT || 3600;
 
 const TENANT_ID = process.env.API_KEY;
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -9,20 +12,29 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const SITE_ID = process.env.SITE_ID;
 const DOCUMENT_LIBRARY_ID = process.env.DOCUMENT_LIBRARY_ID;
 
+if (!process.env.API_KEY) {
+    console.error("API_KEY is not defined!");
+};
+if (!process.env.CLIENT_ID) {
+    console.error("CLIENT_ID is not defined!");
+};
+if (!process.env.API_KEY) {
+    console.error("CLIENT_SECRET is not defined!");
+};
+if (!process.env.API_KEY) {
+    console.error("SITE_ID is not defined!");
+};
+if (!process.env.API_KEY) {
+    console.error("DOCUMENT_LIBRARY_ID is not defined!");
+};
 
-const app = express();
-const PORT = process.env.PORT || 3600;
-
-// 🔹 Replace these with your actual credentials
-// const TENANT_ID = apiKeyTenantId;
-// const CLIENT_ID = apiKeyClientId;
-// const CLIENT_SECRET = apiKeyClientSecret;
-// const SITE_ID  = databaseUrl;
-// const DOCUMENT_LIBRARY_ID = databaseUrllib; 
 
 
-// ✅ Function to get an access token from Microsoft Entra ID (Azure AD)
+
 async function getAccessToken() {
+    console.log(TENANT_ID);
+
+    
     const tokenEndpoint = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`;
     const params = new URLSearchParams();
     params.append('grant_type', 'client_credentials');
@@ -39,7 +51,7 @@ async function getAccessToken() {
     }
 }
 
-// ✅ Function to fetch **all** SharePoint files with pagination
+
 async function getAllSharePointFiles(accessToken, endpoint) {
     let allFiles = [];
 
@@ -49,38 +61,41 @@ async function getAllSharePointFiles(accessToken, endpoint) {
                 headers: { Authorization: `Bearer ${accessToken}` }
             });
 
-            allFiles = allFiles.concat(response.data.value); // Add new batch of files
+            allFiles = allFiles.concat(response.data.value); 
 
-            endpoint = response.data["@odata.nextLink"] || null; // Get the next page link
+            endpoint = response.data["@odata.nextLink"] || null; 
         }
 
-        return allFiles; // 🔹 Returning **all properties** of each file
+        return allFiles; 
     } catch (error) {
         console.error("Error fetching SharePoint files:", error.response ? error.response.data : error.message);
         return [];
     }
 }
 
-//per file
+
 async function getAllSharePointFile(accessToken, endpoint) {
     try {
         const response = await axios.get(endpoint, {
             headers: { Authorization: `Bearer ${accessToken}` }
         });
 
-        return response.data; // Return the single file object
+        return response.data; 
     } catch (error) {
         console.error("Error fetching SharePoint file:", error.response ? error.response.data : error.message);
-        return null; // Or throw error
+        return null; 
     }
 }
-// ✅ API Route: Fetch all SharePoint files
+
 app.get('/api/sharepoint/files', async (req, res) => {
     const accessToken = await getAccessToken();
     if (!accessToken) {
         return res.status(500).json({ error: 'Failed to get access token' });
     }
 
+    console.log(TENANT_ID);
+    
+    
     const initialEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/root/children`;
     const files = await getAllSharePointFiles(accessToken, initialEndpoint);
     res.json(files);
@@ -94,12 +109,7 @@ app.get('/api/sharepoint/folders', async (req, res) => {
         return res.status(500).json({ error: 'Failed to get access token' });
     }
 
-    // let folderPath = "root"; 
-    // if (folder) {
-    //     folderPath = encodeURIComponent(folder);
-    // }
-
-    // const folderEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/root:/${folderPath}:/children`;
+    
     const folderEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/items/${itemId}/children`;
 
     const files = await getAllSharePointFiles(accessToken, folderEndpoint);
@@ -134,7 +144,7 @@ app.get('/api/sharepoint/rootFolder', async (req, res) => {
     if (!accessToken) {
         return res.status(500).json({ error: 'Failed to get access token' });
     }
-    // const folderEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/items/${itemId}:/${fileName}`;
+    
     const folderEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/root:/${fileName}`;
     
     
@@ -160,22 +170,94 @@ app.put('/api/sharepoint/uploadFile', async (req, res) => {
 
         const uploadEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/items/${parentId}:/${filename}:/content`;
 
-        // Decode base64 file content
+        
         const decodedFileContent = Buffer.from(fileContent, 'base64');
 
         const response = await axios.put(uploadEndpoint, decodedFileContent, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/octet-stream' // Or the appropriate MIME type
+                'Content-Type': 'application/octet-stream' 
             }
         });
 
-        res.json(response.data); // Return the Graph API response
+        res.json(response.data);
     } catch (error) {
         console.error("Error uploading file:", error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Failed to upload file' });
     }
 });
+
+app.delete("/api/sharepoint/del", async(req, res) => {
+    try {
+        const { fileName } = req.query;
+        const accessToken = await getAccessToken();
+        if (!accessToken) {
+            return res.status(500).json({ error: 'Failed to get access token' });
+        }
+        const deleteEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/root:/${fileName}`;
+        const response = await axios.delete(deleteEndpoint, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (response.status === 204) { 
+            res.status(204).send(); 
+        } else {
+            res.status(response.status).json(response.data); 
+        }
+    } catch (error) {
+        console.error("Error deleting file:", error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to delete file' });
+    }
+});
+app.delete("/api/sharepoint/folder/del", async(req, res) => {
+
+    try {
+        const { itemId, fileName } = req.query;
+        const accessToken = await getAccessToken();
+        if (!accessToken) {
+            return res.status(500).json({ error: 'Failed to get access token'});
+        }
+        const deleteEndpoint = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/items/${itemId}:/${fileName}`;
+        const response = await axios.delete(deleteEndpoint, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (response.status === 204) {
+            res.status(204).send();
+        } else {
+            res.status(response.status).json(response.data);
+        }
+    } catch (error) {
+        console.error("Error deleting file:", error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to delete file' });
+    }
+});
+app.get('api/sharepoint/download', async(req, res) => {
+    try {
+        const { fileName } = req.query;
+        console.log(fileName);
+        
+        const accessToken = await getAccessToken();
+        if (!accessToken) {
+            return res.status(500).json({ error: 'Failed to get access token'});
+        }
+        const getFolder = `https://graph.microsoft.com/v1.0/sites/${SITE_ID}/drives/${DOCUMENT_LIBRARY_ID}/root:/${fileName}?@microsoft.graph.downloadUrl`;
+        const files = await getAllSharePointFile(accessToken, getFolder);
+        res.json(files);
+    } catch (error) {
+        console.error("Error downloading file:", error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to download file' });
+    }
+});
+// DELETE /drives/{drive-id}/items/{item-id}
+// DELETE /groups/{group-id}/drive/items/{item-id}
+// DELETE /me/drive/items/{item-id}
+// DELETE /sites/{siteId}/drive/items/{itemId}
+// DELETE /users/{userId}/drive/items/{itemId}
+
+
 app.use(express.static(path.join(__dirname, 'src')));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

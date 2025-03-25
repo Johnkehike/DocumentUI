@@ -1,4 +1,29 @@
 // import { response } from "express";
+let trashItem = document.querySelector('.fa-trash');
+const downloadItem = document.querySelector('.fa-download');
+
+
+trashItem.addEventListener('click', (e) => {
+    const fileDel = trashItem.dataset.filename;
+    const fileFolder = trashItem.dataset.itemid;
+
+    
+    
+    if (fileFolder !== "017CYZHKV6Y2GOVW7725BZO354PWSELRRZ") {
+        delEachFolderFile(fileFolder, fileDel);
+    } else {
+        delFile(fileDel);
+    }
+    
+    
+});
+
+downloadItem.addEventListener('click', (e) => {
+    const fileDow = downloadItem.dataset.filename;
+    const fileFolder = downloadItem.dataset.itemid;
+    downloadFile(fileDow);
+
+});
 
 let parentId = "";
 
@@ -97,8 +122,158 @@ function displayOfficeDocument(downloadUrl, containerDiv) {
   } catch (error) {
       console.error("Error fetching files:", error);
   }
+  };
+
+  async function downloadFile(fileName) {
+    try {
+        const response = await fetch(`api/sharepoint/download?fileName=${encodeURIComponent(fileName)}`);
+        const files = await response.json();
+        console.log(files);
+        
+
+    } catch (error) {
+        
+    }
   }
+  async function delEachFolderFile(itemId, fileName) {
+    
+    try {
+        const url = `/api/sharepoint/folder/del?fileName=${encodeURIComponent(fileName)}&itemId=${encodeURIComponent(itemId)}`;
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'content-Type': 'application/json'
+            }
+        });
+        if (itemId) {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } else {
+            console.log('file not provided');
+            return;
+        }
+    } catch (error) {
+        console.error("Error fetching files:", error);
+    }
+    getSPO();
+    document.querySelector('.view-doc').innerHTML = '';
+  }
+  async function delFile(fileName) {
+    let data;
+    const url = `/api/sharepoint/del?fileName=${encodeURIComponent(fileName)}`;
+
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json' 
+        }
+    });
+
+    if (fileName) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    } else{
+        console.log("file name not provided.");
+        return; 
+    }
+    getSPO();
+    document.querySelector('.view-doc').innerHTML = '';
+
+  };
+
+  //function for library root folder and first display of items
   async function getSPO() {
+    // document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const response = await fetch('/api/sharepoint/files');
+            const files = await response.json();
+            console.log(files);
+            parentId = files[0].parentReference.id;
+            console.log(parentId);
+
+            const fileList = document.getElementById("docs-cont");
+            const searchInput = document.getElementById("search-input");
+
+            function displayFiles(filesToDisplay) {
+                fileList.innerHTML = ""; // Clear previous list
+
+                filesToDisplay.forEach(file => {
+                    if (file.file) {
+                        const dateString = file.lastModifiedDateTime;
+                        const formattedDate = formatDate(dateString);
+                        const bytes = file.size;
+                        const megabytes = Math.floor(bytesToMB(bytes));
+
+                        const newItem = document.createElement("div");
+                        newItem.classList.add("each-item");
+                        newItem.innerHTML = `
+                            <div class="symbol"><i class="fa-solid fa-file"></i></div>
+                            <div class="item-cont">
+                                <h5>${file.name}</h5>
+                                <p><a href="${file.webUrl}" target="_blank">${megabytes} MB</a> - ${formattedDate}</p>
+                            </div>
+                        `;
+
+                        newItem.addEventListener("click", (e) => {
+                            e.preventDefault();
+                            const mine = file.parentReference.driveId;
+                            console.log(file.parentReference.id);
+
+                            displayRDocument(file.name);
+                            trashItem.setAttribute('data-filename', `${file.name}`);
+                            trashItem.setAttribute('data-itemId', `${file.parentReference.id}`);
+                            downloadItem.setAttribute('data-filename', `${file.name}`);
+                            downloadItem.setAttribute('data-itemId', `${file.parentReference.id}`);
+                            
+
+                            const selectedItem = document.querySelector(".each-item-selected");
+                            if (selectedItem) {
+                                selectedItem.classList.remove("each-item-selected");
+                                selectedItem.classList.add("each-item");
+                            }
+
+                            if (newItem.classList.contains("each-item")) {
+                                newItem.classList.remove("each-item");
+                                newItem.classList.add("each-item-selected");
+                            }
+                        });
+
+                        fileList.appendChild(newItem);
+                    } else {
+                        getFolders(files);
+                    }
+
+                });
+            }
+
+            // Initial display
+            displayFiles(files);
+
+            // Search functionality
+            searchInput.addEventListener("input", () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredFiles = files.filter(file => {
+                    if (file.file) {
+                        return file.name.toLowerCase().includes(searchTerm);
+                    }
+                    return false;
+                });
+                displayFiles(filteredFiles);
+            });
+
+
+
+        } catch (error) {
+            console.error("Error fetching files:", error);
+        }
+
+
+        
+    // });
+};
+  async function dongetSPO() {
     document.addEventListener("DOMContentLoaded", async () => {
         try {
             const response = await fetch('/api/sharepoint/files');
@@ -169,75 +344,6 @@ function displayOfficeDocument(downloadUrl, containerDiv) {
     });
 };
 
-// Function to display the document
-// async function displayDocument(fileUrl, fileName, itemId) {
-  
-
-//   try {
-//     if (itemId) {
-      
-//       const response = await fetch(`/api/sharepoint/eachFolder?itemId=${encodeURIComponent(itemId)}&fileName=${encodeURIComponent(fileName)}`);
-//       const files = await response.json();
-      
-
-      
-      
-      
-//     }
-//     if (!response.ok) {
-//       throw new Error(`HTTP error! status: ${response.status}`);
-//   }
-
-//   const data = await files.json();
-//   console.log("File data from server:", data); // Inspect data
-
-//   if (data === null) {
-//        console.log("Server returned null")
-//   }
-//   } catch (error) {
-//     console.log(error);
-    
-//   }
- 
-  
-// //   const viewDocContainer = document.getElementById("view-doc");
-// //   viewDocContainer.innerHTML = ""; // Clear previous content
-
-
-
-
-// //   try {
-// //       // Determine file type and display appropriately
-// //   if (fileUrl.toLowerCase().endsWith(".pdf")) {
-// //     const embed = document.createElement("embed");
-// //     embed.src = fileUrl;
-// //     embed.type = "application/pdf";
-// //     embed.width = "100%";
-// //     embed.height = "600px";
-// //     viewDocContainer.appendChild(embed);
-// // } else if (fileUrl.toLowerCase().endsWith(".jpg") || fileUrl.toLowerCase().endsWith(".jpeg") || fileUrl.toLowerCase().endsWith(".png") || fileUrl.toLowerCase().endsWith(".gif")) {
-// //     const img = document.createElement("img");
-// //     img.src = fileUrl;
-// //     img.style.maxWidth = "100%";
-// //     viewDocContainer.appendChild(img);
-// // } else if (fileUrl.toLowerCase().endsWith(".docx") || fileUrl.toLowerCase().endsWith(".docx") || fileUrl.toLowerCase().endsWith(".xls") || fileUrl.toLowerCase().endsWith(".xlsx") || fileUrl.toLowerCase().endsWith(".ppt") || fileUrl.toLowerCase().endsWith(".pptx")) {
-// //     // Use Office Online for other documents
-// //     const embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(fileUrl)}`;
-// //     const iframe = document.createElement("iframe");
-// //     iframe.src = embedUrl;
-// //     iframe.width = "100%";
-// //     iframe.height = "600px";
-// //     iframe.frameBorder = "0";
-// //     viewDocContainer.appendChild(iframe);
-// // } else {
-// //   viewDocContainer.innerHTML = "<p>Document type not supported for inline viewing.</p>";
-
-// // }
-// //   } catch (error) {
-// //     console.log(error);
-    
-// //   }
-// };
 
 async function displayDocument(fileUrl, fileName, itemId) {
   try {
@@ -374,6 +480,12 @@ async function fetchFiles(itemId) {
             `;
             newItem.addEventListener("click", () => {
               displayDocument(file.webUrl, file.name, itemId);
+              trashItem.setAttribute('data-filename', file.name);
+              trashItem.setAttribute('data-itemId', file.parentReference.id);
+              downloadItem.setAttribute('data-filename', `${file.name}`);
+              downloadItem.setAttribute('data-itemId', `${file.parentReference.id}`);
+              console.log(file.parentReference.id);
+              
 
               const selectedItem = document.querySelector(".each-item-selected");
               if (selectedItem) {
@@ -406,6 +518,7 @@ function getFolders(folders){
   rootFolder.addEventListener('click', (e) => {
     e.preventDefault();
     getAdded();
+    getSPO();
 
   })
   rootFolder.innerHTML = `<i class="fa-solid fa-folder"></i> 
@@ -519,7 +632,10 @@ async function uploadFileToSharePoint(parentId, filename, file) {
   } catch (error) {
       console.error("Error uploading file:", error);
   }
-}
+};
+
+//download file
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const uploadButton = document.getElementById('upload-button');
@@ -539,15 +655,5 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
 });
-
-// const fileInput = document.getElementById('file-input'); // Replace with your file input element
-// const parentId = "your-parent-folder-id"; // Replace with the parent folder ID
-
-// fileInput.addEventListener('change', (event) => {
-//   const file = event.target.files[0];
-//   if (file) {
-//       uploadFileToSharePoint(parentId, file.name, file);
-//   }
-// });
 
 export { getSPO};
