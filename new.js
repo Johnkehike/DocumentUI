@@ -6,7 +6,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3600;
 
-const TENANT_ID = process.env.API_KEY;
+const TENANT_ID = process.env.TENANT_ID;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const SITE_ID = process.env.SITE_ID;
