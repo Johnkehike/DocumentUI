@@ -12,19 +12,19 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const SITE_ID = process.env.SITE_ID;
 const DOCUMENT_LIBRARY_ID = process.env.DOCUMENT_LIBRARY_ID;
 
-if (!process.env.API_KEY) {
+if (!process.env.TENANT_ID) {
     console.error("API_KEY is not defined!");
 };
 if (!process.env.CLIENT_ID) {
     console.error("CLIENT_ID is not defined!");
 };
-if (!process.env.API_KEY) {
+if (!process.env.CLIENT_SECRET) {
     console.error("CLIENT_SECRET is not defined!");
 };
-if (!process.env.API_KEY) {
+if (!process.env.SITE_ID) {
     console.error("SITE_ID is not defined!");
 };
-if (!process.env.API_KEY) {
+if (!process.env.DOCUMENT_LIBRARY_ID) {
     console.error("DOCUMENT_LIBRARY_ID is not defined!");
 };
 
